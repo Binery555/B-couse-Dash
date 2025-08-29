@@ -1,19 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>Untitled</title>
-  
-
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Binance Course Dashboard – Multilingual</title>
+  <title>Binance Course Dashboard – Clean Design</title>
 
   <!-- Binance Plex Font + Icons -->
   <link href="https://db.onlinewebfonts.com/c/d05c19ccecf7003d248c60ffd6b5e8f7?family=Binance+PLEX" rel="stylesheet"/>
@@ -21,1062 +11,110 @@
 
   <style>
     :root{
-      --bg:#0f1115; --panel:#1b2028; --elev:#1e2329; --border:#2a2f36;
-      --text:#e7edf3; --muted:#d7dde3; --accent:#f0b90b;
+      --accent:#f0b90b; --text:#e7edf3; --border:#2a2f36;
     }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body {
-      margin: 0;
-      font-family: 'Binance PLEX', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;font-family:'Binance PLEX',sans-serif;overflow:hidden}
+
+    /* ===== Background slider ===== */
+    .slider{
+      position:fixed; inset:0; z-index:-1;
     }
-    header {
-      background: var(--elev);
-      padding: 12px 16px;
-      display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 12px;
-      align-items: center;
-      position: sticky; top: 0; z-index: 10;
-      box-shadow: 0 2px 6px rgba(0,0,0,.6);
+    .slide{
+      position:absolute; inset:0;
+      background-size:cover; background-position:center;
+      opacity:0; transition:opacity 1s ease-in-out;
     }
-    header h1 {
-      font-size: 18px; color: var(--accent); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    .slide.active{opacity:1}
+
+    /* ===== Overlay for dark effect ===== */
+    .overlay{
+      position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:0;
     }
-    nav { display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-start }
-    nav a {
-      text-decoration: none; color: var(--text); font-size: 14px;
-      padding: 6px 10px; border-radius: 6px; border:1px solid transparent;
-      transition:.15s;
+
+    /* ===== Header navigation ===== */
+    header{
+      position:relative; z-index:1;
+      display:flex; justify-content:center; align-items:center;
+      padding:20px; flex-wrap:wrap; gap:14px;
+      background:rgba(15,17,21,.45);
+      backdrop-filter:blur(6px);
+      border-bottom:1px solid var(--border);
     }
-    nav a:hover { background: var(--accent); color: var(--bg) }
-    .lang {
-      display:flex; align-items:center; gap:8px;
-      background:#151a21; border:1px solid var(--border);
-      padding:6px 10px; border-radius:8px;
+    header h1{
+      width:100%; text-align:center;
+      font-size:22px; color:var(--accent); margin-bottom:10px;
     }
-    .lang select{
-      background:transparent; color:var(--text); border:none; outline:none; font-size:14px;
+    nav{display:flex; flex-wrap:wrap; gap:10px; justify-content:center}
+    nav a{
+      text-decoration:none; color:var(--text);
+      font-size:15px; padding:10px 14px;
+      border:1px solid var(--border); border-radius:8px;
+      background:rgba(30,30,35,.6);
+      transition:.25s;
     }
-    main { padding: 20px; max-width: 1000px; margin: auto; }
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    nav a:hover{
+      background:var(--accent); color:#111;
+      box-shadow:0 0 15px var(--accent);
+      transform:translateY(-2px);
     }
-    .card h2 { margin: 0 0 10px 0; color: var(--accent); font-size: 18px; }
-    .card p { line-height: 1.6; font-size: 15px; color: var(--muted); }
-    .card ul { padding-left:20px; margin:10px 0 0 }
-    .card li { margin:4px 0; color: var(--muted) }
-    .card img { width:100%; border-radius:8px; margin:12px 0 }
-    footer{ opacity:.7; font-size:12px; padding:24px 0; text-align:center }
-    .hint{font-size:12px; opacity:.8; margin-top:6px}
+
+    footer{
+      position:absolute; bottom:10px; left:0; right:0;
+      text-align:center; font-size:12px; color:#ccc;
+      z-index:1;
+    }
   </style>
 </head>
 <body>
+
+  <!-- Background Images -->
+  <div class="slider">
+    <div class="slide active" style="background-image:url('https://iili.io/K3y2coN.md.png');"></div>
+    <div class="slide" style="background-image:url('https://iili.io/K3y3GLB.md.png');"></div>
+  </div>
+  <div class="overlay"></div>
+
+  <!-- Header Navigation -->
   <header>
-    <h1 id="title">📊 Binance Course Dashboard</h1>
-
-    <!-- Nav -->
-    <nav id="nav">
-      <a href="#getting-started" data-i18n="nav.getting_started">Getting Started</a>
-      <a href="#crypto-basics" data-i18n="nav.crypto_basics">Crypto Basics</a>
-      <a href="#trading-types" data-i18n="nav.trading_types">Trading Types</a>
-      <a href="#order-types" data-i18n="nav.order_types">Order Types</a>
-      <a href="#ta" data-i18n="nav.ta">TA</a>
-      <a href="#fa" data-i18n="nav.fa">FA</a>
-      <a href="#risk" data-i18n="nav.risk">Risk</a>
-      <a href="#strategies" data-i18n="nav.strategies">Strategies</a>
-      <a href="#profit" data-i18n="nav.profit">Profit</a>
-      <a href="#advanced" data-i18n="nav.advanced">Advanced</a>
-      <a href="#security" data-i18n="nav.security">Security</a>
-      <a href="#tools" data-i18n="nav.tools">Tools</a>
+    <h1>📊 Binance Course Dashboard</h1>
+    <nav id="menu">
+        <a href="#" data-url="https://binery555.github.io/Account-Setup-Security-A-Practical-Guide/">Getting Started</a>
+      <a href="#" data-url="https://binery555.github.io/Understanding-Blockchain-Cryptocurrencies-Stablecoins-Decentralization/">Crypto Basics</a>
+      <a href="#" data-url="https://binery555.github.io/Trading-Types-on-Binance-The-Complete-Guide/">Trading Types</a>
+      <a href="#" data-url="https://binery555.github.io/Order-Types-Explained-Market-Limit-Stop-Limit-and-OCO/">Order Types</a>
+      <a href="#" data-url="https://binery555.github.io/Technical-Analysis-Candlesticks-Indicators-Trend-Lines/">Technical Analysis (TA)</a>
+      <a href="#" data-url="https://binery555.github.io/Business-Strategies-Choose-the-one-that-fits-your-time/">Fundamental Analysis (FA)</a>
+      <a href="#" data-url="https://binery555.github.io/Risk-Management-Your-First-Line-of-Financial-Safety/">Risk Management</a>
+      <a href="#" data-url="https://binery555.github.io/Advanced-Features-Launchpad-Earn-Liquidity/">Trading Strategies</a>
+      <a href="#" data-url="https://binery555.github.io/Profit-Calculations-ROI-PnL-Margin-Fees-Liquidation/">Profit Calculations</a>
+      <a href="#" data-url="https://binery555.github.io/Fundamental-Analysis-FA-/">Advanced Features</a>
+      <a href="#" data-url="https://binery555.github.io/-Security-Regulation/">Security & Regulation</a>
+      <a href="#" data-url="https://binery555.github.io/-Practical-Crypto-Tools/">Practical Tools</a>
     </nav>
-
-    <!-- Language switcher -->
-    <div class="lang" title="Change language">
-      <i class="fa-solid fa-globe"></i>
-      <select id="langSelect" aria-label="Language">
-        <option value="en">English</option>
-        <option value="si">සිංහල</option>
-        <option value="ta">தமிழ்</option>
-        <option value="th">ไทย</option>
-        <option value="fr">Français</option>
-      </select>
-    </div>
   </header>
 
-  <main>
-    <!-- Cards (titles + content filled by JS) -->
-    <div class="card" id="getting-started">
-      <h2 data-i18n="sections.getting_started.title">Getting Started</h2>
-      <div data-i18n="sections.getting_started.html" data-html="1"></div>
-    </div>
-
-    <div class="card" id="crypto-basics">
-      <h2 data-i18n="sections.crypto_basics.title">Crypto Basics (Fundamentals)</h2>
-      <div data-i18n="sections.crypto_basics.html" data-html="1"></div>
-    </div>
-
-    <div class="card" id="trading-types">
-      <h2 data-i18n="sections.trading_types.title">Trading Types on Binance</h2>
-      <div data-i18n="sections.trading_types.html" data-html="1"></div>
-    </div>
-
-    <div class="card" id="order-types">
-      <h2 data-i18n="sections.order_types.title">Order Types</h2>
-      <div data-i18n="sections.order_types.html" data-html="1"></div>
-    </div>
-
-    <div class="card" id="ta">
-      <h2 data-i18n="sections.ta.title">Technical Analysis (TA)</h2>
-      <div data-i18n="sections.ta.html" data-html="1"></div>
-    </div>
-
-    <div class="card" id="fa">
-      <h2 data-i18n="sections.fa.title">Fundamental Analysis (FA)</h2>
-      <div data-i18n="sections.fa.html" data-html="1"></div>
-    </div>
-
-    <div class="card" id="risk">
-      <h2 data-i18n="sections.risk.title">Risk Management</h2>
-      <div data-i18n="sections.risk.html" data-html="1"></div>
-    </div>
-
-    <div class="card" id="strategies">
-      <h2 data-i18n="sections.strategies.title">Trading Strategies</h2>
-      <div data-i18n="sections.strategies.html" data-html="1"></div>
-    </div>
-
-    <div class="card" id="profit">
-      <h2 data-i18n="sections.profit.title">Profit Calculations</h2>
-      <div data-i18n="sections.profit.html" data-html="1"></div>
-    </div>
-
-    <div class="card" id="advanced">
-      <h2 data-i18n="sections.advanced.title">Advanced Binance Features</h2>
-      <div data-i18n="sections.advanced.html" data-html="1"></div>
-    </div>
-
-    <div class="card" id="security">
-      <h2 data-i18n="sections.security.title">Security & Regulation</h2>
-      <div data-i18n="sections.security.html" data-html="1"></div>
-    </div>
-
-    <div class="card" id="tools">
-      <h2 data-i18n="sections.tools.title">Practical Tools</h2>
-      <div data-i18n="sections.tools.html" data-html="1"></div>
-      <div class="hint" data-i18n="hint.switch_lang">💡 Use the language menu above to switch content.</div>
-    </div>
-
-    <footer id="footerNote">© Binance Course Demo – for educational purposes.</footer>
-  </main>
+  <!-- Footer -->
+  <footer>© Binance Course Demo – for educational purposes.</footer>
 
   <script>
-    // ---- i18n content (EN default full text; other langs concise & clear) ----
-    const i18n = {
-      en: {
-        title: "📊 Binance Course Dashboard",
-        hint: { switch_lang: "💡 Use the language menu above to switch content." },
-        nav: {
-          getting_started: "Getting Started",
-          crypto_basics: "Crypto Basics",
-          trading_types: "Trading Types",
-          order_types: "Order Types",
-          ta: "Technical Analysis (TA)",
-          fa: "Fundamental Analysis (FA)",
-          risk: "Risk Management",
-          strategies: "Trading Strategies",
-          profit: "Profit Calculations",
-          advanced: "Advanced Features",
-          security: "Security & Regulation",
-          tools: "Practical Tools"
-        },
-        sections: {
-          getting_started: {
-            title: "Getting Started",
-            html: `
-              <p>Create your Binance account, verify your identity (KYC), and secure your account with 2FA.</p>
-              <ul>
-                <li>Open an account with email/phone</li>
-                <li>Complete Identity Verification (KYC)</li>
-                <li>Wallet types: <b>Spot</b>, <b>Futures</b>, <b>Margin</b></li>
-                <li>Deposit & Withdraw (Crypto/Fiat)</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?crypto,exchange" alt="Getting started with Binance">
-            `
-          },
-          crypto_basics: {
-            title: "Crypto Basics (Fundamentals)",
-            html: `
-              <p>Understand blockchain, cryptocurrencies, stablecoins, and decentralization.</p>
-              <ul>
-                <li>What is Blockchain?</li>
-                <li>Major coins: BTC, ETH, BNB</li>
-                <li>Stablecoins: USDT, USDC</li>
-                <li>Use cases: Payments, DeFi, NFTs</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?bitcoin,blockchain" alt="Crypto basics">
-            `
-          },
-          trading_types: {
-            title: "Trading Types on Binance",
-            html: `
-              <p>Markets available on Binance:</p>
-              <ul>
-                <li>Spot Trading</li>
-                <li>Margin Trading</li>
-                <li>Futures Trading</li>
-                <li>P2P (Peer-to-Peer)</li>
-                <li>Options Trading</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?trading,charts" alt="Trading types">
-            `
-          },
-          order_types: {
-            title: "Order Types",
-            html: `
-              <p>Place trades effectively using the right order type.</p>
-              <ul>
-                <li>Market Order</li>
-                <li>Limit Order</li>
-                <li>Stop-Limit</li>
-                <li>OCO (One Cancels the Other)</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?stock,order" alt="Order types">
-            `
-          },
-          ta: {
-            title: "Technical Analysis (TA)",
-            html: `
-              <p>Analyze price action and indicators to time entries/exits.</p>
-              <ul>
-                <li>Candlestick patterns</li>
-                <li>Indicators: RSI, MACD, Bollinger Bands</li>
-                <li>Trend lines & Support/Resistance</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?charts,analysis" alt="Technical analysis">
-            `
-          },
-          fa: {
-            title: "Fundamental Analysis (FA)",
-            html: `
-              <p>Evaluate long-term value through project fundamentals.</p>
-              <ul>
-                <li>Tokenomics (supply, emissions, utility)</li>
-                <li>Team & roadmap</li>
-                <li>Whitepapers</li>
-                <li>Market news & sentiment</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?fundamentals,finance" alt="Fundamental analysis">
-            `
-          },
-          risk: {
-            title: "Risk Management",
-            html: `
-              <p>Protect your capital first; profits follow.</p>
-              <ul>
-                <li>Stop-loss & Take-profit</li>
-                <li>Position sizing, leverage control</li>
-                <li>Diversification</li>
-                <li>Emotional discipline</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?risk,management" alt="Risk management">
-            `
-          },
-          strategies: {
-            title: "Trading Strategies",
-            html: `
-              <p>Pick a strategy that matches your time and risk.</p>
-              <ul>
-                <li>Scalping</li>
-                <li>Day Trading</li>
-                <li>Swing Trading</li>
-                <li>HODL (long-term)</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?strategy,trading" alt="Trading strategies">
-            `
-          },
-          profit: {
-            title: "Profit Calculations",
-            html: `
-              <p>Master ROI, PNL, margin usage, fees, and liquidation risk.</p>
-              <ul>
-                <li>ROI (Return on Investment)</li>
-                <li>PNL (Profit and Loss)</li>
-                <li>Margin & Leverage</li>
-                <li>Fees & Liquidation Price</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?profit,crypto" alt="Profit calculations">
-            `
-          },
-          advanced: {
-            title: "Advanced Binance Features",
-            html: `
-              <p>Explore more ways to earn or participate.</p>
-              <ul>
-                <li>Binance Launchpad</li>
-                <li>Binance Earn & Staking</li>
-                <li>Liquidity Pools</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?crypto,defi" alt="Advanced features">
-            `
-          },
-          security: {
-            title: "Security & Regulation",
-            html: `
-              <p>Keep your funds safe and comply with local rules.</p>
-              <ul>
-                <li>Enable 2FA (Authenticator/SMS)</li>
-                <li>Beware of phishing</li>
-                <li>KYC/AML basics</li>
-                <li>Country-specific regulations</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?cybersecurity,crypto" alt="Security">
-            `
-          },
-          tools: {
-            title: "Practical Tools",
-            html: `
-              <p>Utilities to enhance your workflow.</p>
-              <ul>
-                <li>Profit & ROI calculators</li>
-                <li>Portfolio trackers</li>
-                <li>Price alerts</li>
-                <li>Mobile apps</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?tools,finance" alt="Practical tools">
-            `
-          }
-        }
-      },
+    /* Slider Auto Rotate */
+    const slides=document.querySelectorAll('.slide');
+    let i=0;
+    setInterval(()=>{
+      slides[i].classList.remove('active');
+      i=(i+1)%slides.length;
+      slides[i].classList.add('active');
+    },5000);
 
-      // Sinhala
-      si: {
-        title: "📊 Binance Course Dashboard",
-        hint: { switch_lang: "💡 ඉහළ Language menu එකෙන් භාෂාව මාරු කරන්න." },
-        nav: {
-          getting_started: "ආරම්භය",
-          crypto_basics: "ක්‍රිප්ටෝ මූලිකය",
-          trading_types: "වෑපාර වර්ග",
-          order_types: "ඇනවුම් වර්ග",
-          ta: "තාක්ෂණික විශ්ලේෂණය (TA)",
-          fa: "මූලික විශ්ලේෂණය (FA)",
-          risk: "අාපදා කළමනාකරණය",
-          strategies: "යාන්ත්‍රණ",
-          profit: "ලාභ ගණනය",
-          advanced: "උසස් විශේෂාංග",
-          security: "ආරක්ෂාව & නියාමන",
-          tools: " practically මෙවලම්"
-        },
-        sections: {
-          getting_started: {
-            title: "ආරම්භය",
-            html: `
-              <p>Binance ගිණුමක් තැනීම, KYC තහවුරු කිරීම සහ 2FA සක්‍රිය කිරීම.</p>
-              <ul>
-                <li>ඊමේල්/දුරකථනයෙන් ගිණුමක් සාදන්න</li>
-                <li>KYC සම්පූර්ණ කරන්න</li>
-                <li>කොශ: Spot / Futures / Margin</li>
-                <li>තැන්පතු & මුදල් ආපසු ගැනීම</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?crypto,exchange" alt="Binance ආරම්භය">
-            `
-          },
-          crypto_basics: {
-            title: "ක්‍රිප්ටෝ මූලිකය (Fundamentals)",
-            html: `
-              <p>Blockchain, cryptocurrencies, stablecoins පිළිබඳ මූලික අවබෝධය.</p>
-              <ul>
-                <li>Blockchain කියන්නේ මොකද්ද?</li>
-                <li>BTC / ETH / BNB</li>
-                <li>Stablecoins: USDT / USDC</li>
-                <li>Use-cases: Payments, DeFi, NFTs</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?bitcoin,blockchain" alt="ක්‍රිප්ටෝ මූලිකය">
-            `
-          },
-          trading_types: {
-            title: "Binance හි ව්‍යාපාර වර්ග",
-            html: `
-              <p>වෙළඳපොළ මෝඩල් කිහිපයක් ඇත.</p>
-              <ul>
-                <li>Spot Trading</li>
-                <li>Margin Trading</li>
-                <li>Futures Trading</li>
-                <li>P2P</li>
-                <li>Options</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?trading,charts" alt="Trading types">
-            `
-          },
-          order_types: {
-            title: "ඇණවුම් වර්ග",
-            html: `
-              <p>නිවැරදි ඇණවුම් වර්ගය තෝරා ගනිමු.</p>
-              <ul>
-                <li>Market</li>
-                <li>Limit</li>
-                <li>Stop-Limit</li>
-                <li>OCO</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?stock,order" alt="Order types">
-            `
-          },
-          ta: {
-            title: "තාක්ෂණික විශ්ලේෂණය (TA)",
-            html: `
-              <p>Candlesticks, Indicators සහ Trend lines භාවිතයෙන් මිල විශ්ලේෂණය.</p>
-              <ul>
-                <li>Candlestick patterns</li>
-                <li>RSI / MACD / Bollinger Bands</li>
-                <li>Support / Resistance</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?charts,analysis" alt="TA">
-            `
-          },
-          fa: {
-            title: "මූලික විශ්ලේෂණය (FA)",
-            html: `
-              <p>දීර්ඝ කාලීන වටිනාකම project fundamentals මත ඇගයීම.</p>
-              <ul>
-                <li>Tokenomics</li>
-                <li>Team & Roadmap</li>
-                <li>Whitepaper</li>
-                <li>News & Sentiment</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?fundamentals,finance" alt="FA">
-            `
-          },
-          risk: {
-            title: "අාපදා කළමනාකරණය",
-            html: `
-              <p>මූල්‍ය ආරක්ෂාව මුල්මයි.</p>
-              <ul>
-                <li>Stop-loss / Take-profit</li>
-                <li>Position sizing & leverage</li>
-                <li>Diversification</li>
-                <li>අවංක ආකල්ප</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?risk,management" alt="Risk">
-            `
-          },
-          strategies: {
-            title: "ව්‍යාපාර යාන්ත්‍රණ",
-            html: `
-              <p>ඔබගේ වේලාවට ගැළපෙන strategy එක තෝරන්න.</p>
-              <ul>
-                <li>Scalping</li>
-                <li>Day / Swing Trading</li>
-                <li>HODL</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?strategy,trading" alt="Strategies">
-            `
-          },
-          profit: {
-            title: "ලාභ ගණනය",
-            html: `
-              <p>ROI, PNL, Margin, Fees, Liquidation ගණනය.</p>
-              <ul>
-                <li>ROI / PNL</li>
-                <li>Margin & Leverage</li>
-                <li>Fees & Liquidation</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?profit,crypto" alt="Profit">
-            `
-          },
-          advanced: {
-            title: "උසස් Binance Features",
-            html: `
-              <ul>
-                <li>Launchpad</li>
-                <li>Earn / Staking</li>
-                <li>Liquidity Pools</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?crypto,defi" alt="Advanced">
-            `
-          },
-          security: {
-            title: "ආරක්ෂාව & නියාමන",
-            html: `
-              <ul>
-                <li>2FA සක්‍රිය කරන්න</li>
-                <li>Phishing වලින් අවධානයෙන්</li>
-                <li>KYC / AML</li>
-                <li>දේශීය නීති</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?cybersecurity,crypto" alt="Security">
-            `
-          },
-          tools: {
-            title: "ප්‍රයෝගික මෙවලම්",
-            html: `
-              <ul>
-                <li>Profit/ROI Calculators</li>
-                <li>Portfolio Trackers</li>
-                <li>Price Alerts</li>
-                <li>Mobile Apps</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?tools,finance" alt="Tools">
-            `
-          }
-        }
-      },
-
-      // Tamil
-      ta: {
-        title: "📊 Binance பாடநெறி பலகை",
-        hint: { switch_lang: "💡 மேலிருக்கும் மொழி பட்டியை பயன்படுத்தி மாற்றலாம்." },
-        nav: {
-          getting_started: "தொடக்கம்",
-          crypto_basics: "கிரிப்டோ அடிப்படைகள்",
-          trading_types: "வர்த்தக வகைகள்",
-          order_types: "ஆர்டர் வகைகள்",
-          ta: "தொழில்நுட்ப பகுப்பு (TA)",
-          fa: "அடிப்படை பகுப்பு (FA)",
-          risk: "அபாய முகாமை",
-          strategies: "வியூகங்கள்",
-          profit: "இலாபக் கணக்கீடு",
-          advanced: "மேம்பட்ட அம்சங்கள்",
-          security: "பாதுகாப்பு & விதிமுறை",
-          tools: "கருவிகள்"
-        },
-        sections: {
-          getting_started: {
-            title: "தொடக்கம்",
-            html: `
-              <p>Binance கணக்கு உருவாக்கம், KYC சரிபார்ப்பு, 2FA பாதுகாப்பு.</p>
-              <ul>
-                <li>மின்னஞ்சல்/பேசியில் பதிவு</li>
-                <li>KYC முடிக்கவும்</li>
-                <li>பணப்பை: Spot / Futures / Margin</li>
-                <li>வைப்பு & பணப்பிரிப்பு</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?crypto,exchange" alt="தொடக்கம்">
-            `
-          },
-          crypto_basics: {
-            title: "கிரிப்டோ அடிப்படைகள்",
-            html: `
-              <p>Blockchain, நாணயங்கள், stablecoins, decentralization.</p>
-              <ul>
-                <li>Blockchain என்ன?</li>
-                <li>BTC / ETH / BNB</li>
-                <li>USDT / USDC</li>
-                <li>Payments, DeFi, NFTs</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?bitcoin,blockchain" alt="அடிப்படை">
-            `
-          },
-          trading_types: {
-            title: "Binance வர்த்தக வகைகள்",
-            html: `
-              <ul>
-                <li>Spot</li>
-                <li>Margin</li>
-                <li>Futures</li>
-                <li>P2P</li>
-                <li>Options</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?trading,charts" alt="வகைகள்">
-            `
-          },
-          order_types: {
-            title: "ஆர்டர் வகைகள்",
-            html: `
-              <ul>
-                <li>Market</li>
-                <li>Limit</li>
-                <li>Stop-Limit</li>
-                <li>OCO</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?stock,order" alt="ஆர்டர்">
-            `
-          },
-          ta: {
-            title: "தொழில்நுட்ப பகுப்பு (TA)",
-            html: `
-              <ul>
-                <li>Candlesticks</li>
-                <li>RSI / MACD / BB</li>
-                <li>Trendlines & S/R</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?charts,analysis" alt="TA">
-            `
-          },
-          fa: {
-            title: "அடிப்படை பகுப்பு (FA)",
-            html: `
-              <ul>
-                <li>Tokenomics</li>
-                <li>அணி & திட்டபடம்</li>
-                <li>Whitepaper</li>
-                <li>செய்திகள் & உணர்வு</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?fundamentals,finance" alt="FA">
-            `
-          },
-          risk: {
-            title: "அபாய முகாமை",
-            html: `
-              <ul>
-                <li>Stop-loss / Take-profit</li>
-                <li>அளவு & லீவரேஜ்</li>
-                <li>Diversification</li>
-                <li>ஒழுக்கம்</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?risk,management" alt="Risk">
-            `
-          },
-          strategies: {
-            title: "வியூகங்கள்",
-            html: `
-              <ul>
-                <li>Scalping</li>
-                <li>Day / Swing</li>
-                <li>HODL</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?strategy,trading" alt="Strategies">
-            `
-          },
-          profit: {
-            title: "இலாபக் கணக்கீடு",
-            html: `
-              <ul>
-                <li>ROI / PNL</li>
-                <li>Margin & Leverage</li>
-                <li>Fees & Liquidation</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?profit,crypto" alt="Profit">
-            `
-          },
-          advanced: {
-            title: "மேம்பட்ட அம்சங்கள்",
-            html: `
-              <ul>
-                <li>Launchpad</li>
-                <li>Earn / Staking</li>
-                <li>Liquidity Pools</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?crypto,defi" alt="Advanced">
-            `
-          },
-          security: {
-            title: "பாதுகாப்பு & விதிமுறை",
-            html: `
-              <ul>
-                <li>2FA</li>
-                <li>Phishing எச்சரிக்கை</li>
-                <li>KYC / AML</li>
-                <li>உள்ளூர் விதிகள்</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?cybersecurity,crypto" alt="Security">
-            `
-          },
-          tools: {
-            title: "கருவிகள்",
-            html: `
-              <ul>
-                <li>Calculator</li>
-                <li>Portfolio Tracker</li>
-                <li>Price Alerts</li>
-                <li>Apps</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?tools,finance" alt="Tools">
-            `
-          }
-        }
-      },
-
-      // Thai
-      th: {
-        title: "📊 คอร์ส Binance (หลายภาษา)",
-        hint: { switch_lang: "💡 เปลี่ยนภาษาได้จากเมนูด้านบน" },
-        nav: {
-          getting_started: "เริ่มต้น",
-          crypto_basics: "พื้นฐานคริปโต",
-          trading_types: "ประเภทการเทรด",
-          order_types: "ประเภทคำสั่ง",
-          ta: "วิเคราะห์ทางเทคนิค (TA)",
-          fa: "วิเคราะห์ปัจจัยพื้นฐาน (FA)",
-          risk: "การจัดการความเสี่ยง",
-          strategies: "กลยุทธ์",
-          profit: "คำนวณกำไร",
-          advanced: "ฟีเจอร์ขั้นสูง",
-          security: "ความปลอดภัย & กฎระเบียบ",
-          tools: "เครื่องมือ"
-        },
-        sections: {
-          getting_started: {
-            title: "เริ่มต้น",
-            html: `
-              <p>สมัครบัญชี Binance, ยืนยันตัวตน (KYC) และเปิด 2FA.</p>
-              <ul>
-                <li>สมัครด้วยอีเมล/มือถือ</li>
-                <li>ยืนยันตัวตน KYC</li>
-                <li>กระเป๋า: Spot / Futures / Margin</li>
-                <li>ฝากและถอน</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?crypto,exchange" alt="เริ่มต้น">
-            `
-          },
-          crypto_basics: {
-            title: "พื้นฐานคริปโต",
-            html: `
-              <p>เข้าใจบล็อกเชน เหรียญคริปโต และ Stablecoin.</p>
-              <ul>
-                <li>Blockchain คืออะไร</li>
-                <li>BTC / ETH / BNB</li>
-                <li>USDT / USDC</li>
-                <li>Payments, DeFi, NFTs</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?bitcoin,blockchain" alt="พื้นฐาน">
-            `
-          },
-          trading_types: {
-            title: "ประเภทการเทรด",
-            html: `
-              <ul>
-                <li>Spot</li>
-                <li>Margin</li>
-                <li>Futures</li>
-                <li>P2P</li>
-                <li>Options</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?trading,charts" alt="ประเภท">
-            `
-          },
-          order_types: {
-            title: "ประเภทคำสั่ง",
-            html: `
-              <ul>
-                <li>Market</li>
-                <li>Limit</li>
-                <li>Stop-Limit</li>
-                <li>OCO</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?stock,order" alt="คำสั่ง">
-            `
-          },
-          ta: {
-            title: "วิเคราะห์ทางเทคนิค (TA)",
-            html: `
-              <ul>
-                <li>แท่งเทียน (Candlesticks)</li>
-                <li>RSI / MACD / BB</li>
-                <li>แนวรับ-แนวต้าน</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?charts,analysis" alt="TA">
-            `
-          },
-          fa: {
-            title: "วิเคราะห์ปัจจัยพื้นฐาน (FA)",
-            html: `
-              <ul>
-                <li>Tokenomics</li>
-                <li>ทีมและโร้ดแม็ป</li>
-                <li>ไวท์เปเปอร์</li>
-                <li>ข่าวและ Sentiment</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?fundamentals,finance" alt="FA">
-            `
-          },
-          risk: {
-            title: "การจัดการความเสี่ยง",
-            html: `
-              <ul>
-                <li>Stop-loss / Take-profit</li>
-                <li>ขนาดออเดอร์ & เลเวอเรจ</li>
-                <li>กระจายความเสี่ยง</li>
-                <li>วินัยทางอารมณ์</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?risk,management" alt="Risk">
-            `
-          },
-          strategies: {
-            title: "กลยุทธ์การเทรด",
-            html: `
-              <ul>
-                <li>Scalping</li>
-                <li>Day / Swing</li>
-                <li>ถือยาว (HODL)</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?strategy,trading" alt="Strategies">
-            `
-          },
-          profit: {
-            title: "คำนวณกำไร",
-            html: `
-              <ul>
-                <li>ROI / PNL</li>
-                <li>Margin & Leverage</li>
-                <li>ค่าธรรมเนียม & Liquidation</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?profit,crypto" alt="Profit">
-            `
-          },
-          advanced: {
-            title: "ฟีเจอร์ขั้นสูง",
-            html: `
-              <ul>
-                <li>Launchpad</li>
-                <li>Earn / Staking</li>
-                <li>Liquidity Pools</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?crypto,defi" alt="Advanced">
-            `
-          },
-          security: {
-            title: "ความปลอดภัย & กฎระเบียบ",
-            html: `
-              <ul>
-                <li>เปิดใช้ 2FA</li>
-                <li>ระวังฟิชชิ่ง</li>
-                <li>KYC / AML</li>
-                <li>กฎหมายท้องถิ่น</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?cybersecurity,crypto" alt="Security">
-            `
-          },
-          tools: {
-            title: "เครื่องมือ",
-            html: `
-              <ul>
-                <li>เครื่องคิดเลขกำไร/ROI</li>
-                <li>ติดตามพอร์ต</li>
-                <li>แจ้งเตือนราคา</li>
-                <li>แอปมือถือ</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?tools,finance" alt="Tools">
-            `
-          }
-        }
-      },
-
-      // French
-      fr: {
-        title: "📊 Tableau de cours Binance",
-        hint: { switch_lang: "💡 Utilisez le menu de langue ci-dessus pour changer." },
-        nav: {
-          getting_started: "Démarrage",
-          crypto_basics: "Notions de base",
-          trading_types: "Types de trading",
-          order_types: "Types d’ordres",
-          ta: "Analyse technique (TA)",
-          fa: "Analyse fondamentale (FA)",
-          risk: "Gestion du risque",
-          strategies: "Stratégies",
-          profit: "Calculs de profit",
-          advanced: "Fonctions avancées",
-          security: "Sécurité & Réglementation",
-          tools: "Outils"
-        },
-        sections: {
-          getting_started: {
-            title: "Démarrage",
-            html: `
-              <p>Créez votre compte Binance, vérifiez votre identité (KYC) et activez la 2FA.</p>
-              <ul>
-                <li>Inscription email/téléphone</li>
-                <li>Vérification KYC</li>
-                <li>Portefeuilles : Spot / Futures / Margin</li>
-                <li>Dépôts & retraits</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?crypto,exchange" alt="Démarrage">
-            `
-          },
-          crypto_basics: {
-            title: "Notions de base (Fondamentaux)",
-            html: `
-              <p>Comprendre la blockchain, les cryptos et les stablecoins.</p>
-              <ul>
-                <li>Qu’est-ce que la blockchain ?</li>
-                <li>BTC / ETH / BNB</li>
-                <li>USDT / USDC</li>
-                <li>Paiements, DeFi, NFT</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?bitcoin,blockchain" alt="Notions de base">
-            `
-          },
-          trading_types: {
-            title: "Types de trading",
-            html: `
-              <ul>
-                <li>Spot</li>
-                <li>Margin</li>
-                <li>Futures</li>
-                <li>P2P</li>
-                <li>Options</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?trading,charts" alt="Types de trading">
-            `
-          },
-          order_types: {
-            title: "Types d’ordres",
-            html: `
-              <ul>
-                <li>Marché</li>
-                <li>Limite</li>
-                <li>Stop-Limite</li>
-                <li>OCO</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?stock,order" alt="Types d’ordres">
-            `
-          },
-          ta: {
-            title: "Analyse technique (TA)",
-            html: `
-              <ul>
-                <li>Chandeliers japonais</li>
-                <li>RSI / MACD / Bandes de Bollinger</li>
-                <li>Lignes de tendance & S/R</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?charts,analysis" alt="TA">
-            `
-          },
-          fa: {
-            title: "Analyse fondamentale (FA)",
-            html: `
-              <ul>
-                <li>Tokenomics</li>
-                <li>Équipe & feuille de route</li>
-                <li>Whitepaper</li>
-                <li>Actus & sentiment</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?fundamentals,finance" alt="FA">
-            `
-          },
-          risk: {
-            title: "Gestion du risque",
-            html: `
-              <ul>
-                <li>Stop-loss / Take-profit</li>
-                <li>Taille de position & levier</li>
-                <li>Diversification</li>
-                <li>Discipline émotionnelle</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?risk,management" alt="Risque">
-            `
-          },
-          strategies: {
-            title: "Stratégies de trading",
-            html: `
-              <ul>
-                <li>Scalping</li>
-                <li>Day / Swing</li>
-                <li>HODL (long terme)</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?strategy,trading" alt="Stratégies">
-            `
-          },
-          profit: {
-            title: "Calculs de profit",
-            html: `
-              <ul>
-                <li>ROI / PNL</li>
-                <li>Marge & levier</li>
-                <li>Frais & liquidation</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?profit,crypto" alt="Profit">
-            `
-          },
-          advanced: {
-            title: "Fonctions avancées",
-            html: `
-              <ul>
-                <li>Launchpad</li>
-                <li>Earn / Staking</li>
-                <li>Pools de liquidité</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?crypto,defi" alt="Avancé">
-            `
-          },
-          security: {
-            title: "Sécurité & Réglementation",
-            html: `
-              <ul>
-                <li>Activer la 2FA</li>
-                <li>Se méfier du phishing</li>
-                <li>KYC / LBC (AML)</li>
-                <li>Règles locales</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?cybersecurity,crypto" alt="Sécurité">
-            `
-          },
-          tools: {
-            title: "Outils pratiques",
-            html: `
-              <ul>
-                <li>Calculatrices ROI/Profit</li>
-                <li>Suiveurs de portefeuille</li>
-                <li>Alertes de prix</li>
-                <li>Apps mobiles</li>
-              </ul>
-              <img src="https://source.unsplash.com/1000x400/?tools,finance" alt="Outils">
-            `
-          }
-        }
-      }
-    };
-
-    // ---- i18n engine ----
-    const $ = (sel, root=document) => root.querySelector(sel);
-    const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
-    const langSelect = $('#langSelect');
-
-    function setLang(lang){
-      const pack = i18n[lang] || i18n.en;
-
-      // Title & footer hint
-      $('#title').textContent = pack.title || i18n.en.title;
-      const hintNode = $('[data-i18n="hint.switch_lang"]');
-      if (hintNode) hintNode.textContent = (pack.hint && pack.hint.switch_lang) || i18n.en.hint.switch_lang;
-
-      // Nav labels
-      $$('#nav a').forEach(a=>{
-        const key = a.getAttribute('data-i18n'); // e.g. nav.getting_started
-        const label = getKey(pack, key) || getKey(i18n.en, key);
-        if (label) a.textContent = label;
+    /* Nav Click → Open URL */
+    document.querySelectorAll('#menu a').forEach(a=>{
+      a.addEventListener('click',e=>{
+        e.preventDefault();
+        const url=a.dataset.url;
+        if(url) window.open(url,'_blank','noopener');
       });
-
-      // Section titles + HTML bodies
-      $$('[data-i18n]').forEach(node=>{
-        const key = node.getAttribute('data-i18n');
-        if (!key.startsWith('sections.')) return; // handled below
-
-        const val = getKey(pack, key) || getKey(i18n.en, key);
-        if (!val) return;
-
-        if (node.dataset.html === '1') node.innerHTML = val;
-        else node.textContent = val;
-      });
-
-      // persist
-      try{ localStorage.setItem('lang', lang); }catch(e){}
-      // set <html lang="">
-      document.documentElement.setAttribute('lang', lang);
-    }
-
-    function getKey(obj, dotted){
-      return dotted.split('.').reduce((o,k)=> (o && o[k]!==undefined)? o[k] : undefined, obj);
-    }
-
-    // Init language (persisted or default en)
-    const saved = (()=>{
-      try{ return localStorage.getItem('lang') }catch(e){ return null }
-    })();
-    langSelect.value = saved || 'en';
-    setLang(langSelect.value);
-    langSelect.addEventListener('change', e=> setLang(e.target.value));
+    });
   </script>
-</body>
-</html>
-<!-- partial -->
-  
 </body>
 </html>
