@@ -277,6 +277,9 @@
     .bub.admin:has(img.msg-photo){ max-width: 90vw; }
     img.msg-photo{ width: 90vw; max-width: 90vw; }
   }
+
+  /* >>> HIDE "Admin" label under manually-uploaded photos ONLY */
+  .bub.admin:has(img.msg-photo) .meta{ display:none !important; }
 </style>
 </head>
 <body>
