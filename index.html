@@ -752,12 +752,16 @@ function showTopLoader(on){
 
 /* -------- helpers -------- */
 function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
-function chooseLeverageForROI(pctBase){
-  if (pctBase <= 0) return 5;
-  let lev = 3000 / pctBase;            /* target ~3000% */
-  lev = clamp(lev, 1, 125);            /* Binance cap */
-  return lev;
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+   UPDATED: leverage randomized among [10, 20, 50, 100, 125]
+   (අනිත් logic කිසිවක් වෙනස් කිරීමකින් තොරව)
+   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+function chooseLeverageForROI(/* pctBase not used now */){
+  const pool = [10, 20, 50, 100, 125];
+  return pool[Math.floor(Math.random()*pool.length)];
 }
+
 function chooseNotionalForPNL(roiPct){
   const roiFactor = Math.abs(roiPct)/100 || 0.001;
   const minPNL=300, maxPNL=10000;
@@ -800,7 +804,7 @@ async function buildDayFragment(day, opts={}){
     const side = longPct >= shortPct ? 'LONG' : 'SHORT';
     const pctBase = side==='LONG' ? longPct : shortPct;
 
-    const lev = Math.round(chooseLeverageForROI(Math.max(pctBase, 0.0001)));
+    const lev = Math.round(chooseLeverageForROI());
     const roiPct = pctBase * lev;
 
     const notional = chooseNotionalForPNL(roiPct);
