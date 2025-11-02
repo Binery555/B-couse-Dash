@@ -267,6 +267,33 @@
   /* Manual photo size = profit card width */
   img.msg-photo{max-width:min(85vw,520px); height:auto; border-radius:14px; display:block}
   .preview-note{font-size:12px; color:#2563eb; margin-left:6px}
+
+  /* ==== NEW: VIP JOIN badge (fixed top-left, glowing gold) ==== */
+  .vip-badge{
+    position:fixed; top:10px; left:10px; z-index:9999;
+    display:inline-flex; align-items:center; gap:8px;
+    padding:8px 12px; border-radius:999px;
+    background:linear-gradient(135deg,#3b3b3b,#0f0f0f);
+    border:1px solid rgba(255,215,0,.35);
+    box-shadow:0 0 0 2px rgba(0,0,0,.25), 0 0 18px rgba(255,215,0,.35), inset 0 0 12px rgba(255,215,0,.18);
+    color:#ffd700; font-weight:800; letter-spacing:.3px; text-transform:uppercase; font-size:12px;
+    user-select:none; -webkit-user-select:none;
+  }
+  .vip-badge .shine{
+    position:absolute; inset:0; border-radius:999px; pointer-events:none;
+    background:linear-gradient(120deg, transparent 0%, rgba(255,255,255,.35) 45%, transparent 60%);
+    transform:skewX(-20deg) translateX(-120%);
+    animation:vipshine 3s ease-in-out infinite;
+  }
+  @keyframes vipshine{
+    0%{transform:skewX(-20deg) translateX(-120%);}
+    55%{transform:skewX(-20deg) translateX(120%);}
+    100%{transform:skewX(-20deg) translateX(120%);}
+  }
+  .vip-ico{
+    width:18px;height:18px; display:inline-block;
+    filter: drop-shadow(0 0 6px rgba(255,215,0,.55));
+  }
 </style>
 
 <!-- Keep manual-upload photos same width as 320px profit card -->
@@ -283,6 +310,15 @@
 </style>
 </head>
 <body>
+<!-- ==== NEW: VIP JOIN fixed badge (left-top edge) ==== -->
+<div class="vip-badge" title="Join VIP">
+  <svg class="vip-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M7.5 9l4.5-6 4.5 6 5-2-3 12H5L2.5 7zM8 19h8v2H8z"></path>
+  </svg>
+  <span>VIP JOIN</span>
+  <span class="shine" aria-hidden="true"></span>
+</div>
+
 <div class="wrap">
   <!-- Centered Header -->
   <header>
@@ -371,11 +407,9 @@ function ymdColombo(d){
 function colomboMidnightBounds(dateLike){
   const d = new Date(dateLike);
   const parts = ymdColombo(d).split('-'); // YYYY-MM-DD
-  // Make a date at 00:00:00 in Colombo, then convert to UTC ms
   const y = +parts[0], m = +parts[1]-1, day = +parts[2];
   const atColombo = new Date(Date.UTC(y,m,day,0,0,0));
-  // shift from Colombo offset to UTC: compute offset (minutes) at that date
-  const offMin = -new Date(atColombo.toLocaleString('en-US',{timeZone:TZ})).getTimezoneOffset(); // not perfect in all engines, but works in browsers
+  const offMin = -new Date(atColombo.toLocaleString('en-US',{timeZone:TZ})).getTimezoneOffset();
   const startUTC = new Date(Date.UTC(y,m,day,0,0,0) - (offMin*60000));
   const endUTC   = new Date(startUTC.getTime() + 86400000 - 1);
   return {startUTC, endUTC};
@@ -383,14 +417,12 @@ function colomboMidnightBounds(dateLike){
 function todayColomboYMD(){ return ymdColombo(new Date()); }
 
 /* ====================== PHOTO GROUPS (de-duplicated) ====================== */
-/* 1) Sri Lankan & Indian boys */
 const PH_G1 = Array.from(new Set([
   "https://iili.io/K6t61ln.jpg","https://iili.io/K6t4Naa.jpg","https://iili.io/K6tUy6g.jpg","https://iili.io/K6tUThP.jpg",
   "https://iili.io/K6t8ESR.jpg","https://iili.io/K6tvh4j.jpg","https://iili.io/K6tkVgR.jpg","https://iili.io/K6tOgCG.jpg",
   "https://iili.io/K6twpDu.jpg","https://iili.io/K6twaMx.jpg","https://iili.io/K6tw2yX.jpg","https://iili.io/K6tj0pn.jpg",
   "https://iili.io/K6thQs4.jpg","https://iili.io/K6tXmNa.jpg","https://iili.io/K6tW51S.jpg"
 ]));
-/* 2) Indian & Pakistan girls */
 const PH_G2 = Array.from(new Set([
   "https://iili.io/K6bItu1.jpg","https://iili.io/K6bzb14.jpg","https://iili.io/K6bz7JS.jpg","https://iili.io/K6bxkKl.jpg",
   "https://iili.io/K6bxzFV.jpg","https://iili.io/K6boUZJ.jpg","https://iili.io/K6bon2I.jpg","https://iili.io/K6bnkXf.jpg",
@@ -400,14 +432,12 @@ const PH_G2 = Array.from(new Set([
   "https://iili.io/K6Df3Ja.jpg","https://iili.io/K6DKEAv.jpg","https://iili.io/K6D298x.jpg","https://iili.io/K6Ddf2f.jpg",
   "https://iili.io/K6DJXbS.jpg"
 ]));
-/* 3) Vietnam */
 const PH_G3 = Array.from(new Set([
   "https://iili.io/K6mC7Xj.jpg","https://iili.io/K6mBEDG.jpg","https://iili.io/K6mqbFS.jpg","https://iili.io/K6mq5ve.jpg",
   "https://iili.io/K6mfrIj.jpg","https://iili.io/K6m3vdg.jpg","https://iili.io/K6m3uef.jpg","https://iili.io/K6m2jln.jpg",
   "https://iili.io/K6mdF2a.jpg","https://iili.io/K6mJAbV.jpg","https://iili.io/K6mHkNV.jpg","https://iili.io/K6m9qp2.jpg",
   "https://iili.io/K6by6LF.jpg","https://iili.io/K6byqWF.jpg","https://iili.io/K6bpYcx.jpg"
 ]));
-/* 4) Russian & UK */
 const PH_G4 = Array.from(new Set([
   "https://iili.io/K6mghCB.jpg","https://iili.io/K6mUUq7.jpg","https://iili.io/K6mUKle.jpg","https://iili.io/K6mSIFn.jpg",
   "https://iili.io/K6m80YJ.jpg","https://iili.io/K6mvGs9.jpg","https://iili.io/K6mkLPe.jpg","https://iili.io/K6mkfu2.jpg",
@@ -416,7 +446,7 @@ const PH_G4 = Array.from(new Set([
   "https://iili.io/K6mjaRI.jpg","https://iili.io/K6mhI3l.jpg"
 ]));
 
-/* consume once helpers to avoid duplicate photos */
+/* consume once helpers */
 function popOne(list){ if(!list.length) return null; return list.splice(Math.floor(Math.random()*list.length),1)[0]; }
 
 /* ====================== NAME POOLS ====================== */
@@ -656,8 +686,23 @@ const CUSTOM_QR_POOL = [
   { url:"https://iili.io/K6pewla.jpg", code:"475308515" }
 ];
 
+/* ======== NEW: Language packs & selector (≈ 1 in 10 cards VN/TH) ======== */
+function langPackRandom(){
+  // ~10% chance to switch from English. If switched, 50/50 VN or TH.
+  const useAlt = Math.random() < 0.10;
+  if(!useAlt){
+    return { code:'EN', LONG:'Long', SHORT:'Short', ENTRY:'Entry Price', LAST:'Last Price' };
+  }
+  const isVN = Math.random() < 0.5;
+  if(isVN){
+    return { code:'VI', LONG:'Mua', SHORT:'Bán', ENTRY:'Giá vào lệnh', LAST:'Giá hiện tại' };
+  }else{
+    return { code:'TH', LONG:'ซื้อ', SHORT:'ชอร์ต', ENTRY:'ราคาเข้า', LAST:'ราคาล่าสุด' };
+  }
+}
+
 /* ---------- CARD TEMPLATES ---------- */
-function makeProfitCardOld({side, leverage, symbol, entry, last, roiPct, pnlUSDT, ref, qrUrl}){
+function makeProfitCardOld({side, leverage, symbol, entry, last, roiPct, pnlUSDT, ref, qrUrl, lp}){
   const wrap = document.createElement('div');
   wrap.className = 'pcard';
   wrap.innerHTML = `
@@ -670,14 +715,14 @@ function makeProfitCardOld({side, leverage, symbol, entry, last, roiPct, pnlUSDT
         </div>
       </div>
       <div class="trade-info">
-        <span class="${side==='LONG'?'long':'short'}">${side==='LONG'?'Long':'Short'}</span>
+        <span class="${side==='LONG'?'long':'short'}">${side==='LONG'?lp.LONG:lp.SHORT}</span>
         <span>|</span><span>${leverage}x</span>
         <span>|</span><span>${symbol} Perpetual</span>
       </div>
       <div class="percentage ${roiPct>=0?'green':'red'}">${roiPct>=0?'+':''}${roiPct.toFixed(2)}%</div>
       <div class="price-section">
-        <div class="price-line"><span class="price-label">Entry Price</span><span class="price-value">${fmtPrice(entry)}</span></div>
-        <div class="price-line"><span class="price-label">Last Price</span><span class="price-value">${fmtPrice(last)}</span></div>
+        <div class="price-line"><span class="price-label">${lp.ENTRY}</span><span class="price-value">${fmtPrice(entry)}</span></div>
+        <div class="price-line"><span class="price-label">${lp.LAST}</span><span class="price-value">${fmtPrice(last)}</span></div>
       </div>
       <div class="referral-section">
         <img class="qr" src="${qrUrl || 'https://iili.io/K1dUMml.jpg'}" alt="QR Code"/>
@@ -691,7 +736,7 @@ function makeProfitCardOld({side, leverage, symbol, entry, last, roiPct, pnlUSDT
   return wrap;
 }
 
-function makeProfitCardNew({side, leverage, symbol, entry, last, roiPct, pnlUSDT, member, ymd, randomTime, ref, qrUrl}){
+function makeProfitCardNew({side, leverage, symbol, entry, last, roiPct, pnlUSDT, member, ymd, randomTime, ref, qrUrl, lp}){
   const wrap = document.createElement('div');
   wrap.className = 'nx-card';
   wrap.style.background = `#111 url("${pick(NX_BACKGROUNDS)}") center/cover no-repeat`;
@@ -713,14 +758,14 @@ function makeProfitCardNew({side, leverage, symbol, entry, last, roiPct, pnlUSDT
     <div class="nx-body">
       <div class="nx-title">${symbol} PERPETUAL</div>
       <div class="nx-pos">
-        <span class="${side==='LONG'?'nx-long':'nx-short'}">${side==='LONG'?'Long':'Short'}</span>
+        <span class="${side==='LONG'?'nx-long':'nx-short'}">${side==='LONG'?lp.LONG:lp.SHORT}</span>
         <span class="nx-div"></span>
         <span class="nx-lev">${leverage}x</span>
       </div>
       <div class="nx-pnl">${pnlLine}</div>
       <div class="nx-prices">
-        <div class="nx-entry"><div class="nx-label">Entry Price</div><div class="nx-value">${fmtPrice(entry)}</div></div>
-        <div class="nx-last"><div class="nx-label">Last Price</div><div class="nx-value">${fmtPrice(last)}</div></div>
+        <div class="nx-entry"><div class="nx-label">${lp.ENTRY}</div><div class="nx-value">${fmtPrice(entry)}</div></div>
+        <div class="nx-last"><div class="nx-label">${lp.LAST}</div><div class="nx-value">${fmtPrice(last)}</div></div>
       </div>
     </div>
     <div class="nx-foot">
@@ -753,14 +798,11 @@ function showTopLoader(on){
   TOP_LOADER.setAttribute('aria-busy', on ? 'true' : 'false');
 }
 
-/* -------- helpers -------- */
+/* helpers */
 function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
 
-/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-   UPDATED: leverage randomized among [10, 20, 50, 100, 125]
-   (අනිත් logic කිසිවක් වෙනස් කිරීමකින් තොරව)
-   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
-function chooseLeverageForROI(/* pctBase not used now */){
+/* >>> randomized leverage pool kept as-is */
+function chooseLeverageForROI(){
   const pool = [10, 20, 50, 100, 125];
   return pool[Math.floor(Math.random()*pool.length)];
 }
@@ -796,7 +838,7 @@ async function buildDayFragment(day, opts={}){
     const entry = k.open;
     let last  = k.close;
 
-    // If it's TODAY in Colombo, use LIVE last price instead of yesterday close
+    // If it's TODAY in Colombo, use LIVE last price
     if (isToday){
       const live = await loadCurrentPrice(symbol);
       if (live && isFinite(live)) last = live;
@@ -821,10 +863,14 @@ async function buildDayFragment(day, opts={}){
     const timeText = `${hh}:${mm}:${ss}`;
 
     const tempRef = String(Math.floor(100000000 + Math.random()*900000000));
-    const useNew = true; // keep new card style for uniformity near “today”
+
+    /* NEW: per-card language pack (≈1/10 in VI or TH) */
+    const lp = langPackRandom();
+
+    const useNew = true;
     const node = useNew
-      ? makeProfitCardNew({side, leverage:lev, symbol, entry, last, roiPct, pnlUSDT, member, ymd, randomTime:timeText, ref:tempRef, qrUrl:null})
-      : makeProfitCardOld({side, leverage:lev, symbol, entry, last, roiPct, pnlUSDT, ref:tempRef, qrUrl:null});
+      ? makeProfitCardNew({side, leverage:lev, symbol, entry, last, roiPct, pnlUSDT, member, ymd, randomTime:timeText, ref:tempRef, qrUrl:null, lp})
+      : makeProfitCardOld({side, leverage:lev, symbol, entry, last, roiPct, pnlUSDT, ref:tempRef, qrUrl:null, lp});
 
     frag.appendChild(makeAdminBubbleNode(node, member.name));
   }
@@ -880,11 +926,10 @@ function writeStore(obj){
   try{ localStorage.setItem(STORE_KEY, JSON.stringify(obj)); }catch(_){}
 }
 
-/* Ensure ~10 cards exist for a given Colombo date; if not, create and append at bottom */
+/* Ensure ~10 cards exist for a given Colombo date */
 async function ensureDailyCardsFor(colomboDateStr){
   const store = readStore();
   if (!store[colomboDateStr]){
-    // create a fixed count ~10 for the day
     const day = new Date(colomboDateStr+'T00:00:00');
     const frag = await buildDayFragment(day, {count:10});
     CHAT.appendChild(frag);
@@ -895,36 +940,32 @@ async function ensureDailyCardsFor(colomboDateStr){
   }
 }
 
-/* Backfill any missing days since last open (adds ~10 per missing day, bottom-up chronological) */
+/* Backfill small recent gap */
 async function backfillMissingDays(){
   const store = readStore();
   const today = todayColomboYMD();
 
-  // find last recorded day
-  const savedDays = Object.keys(store).sort(); // ascending YYYY-MM-DD
+  const savedDays = Object.keys(store).sort();
   let startIdx = DAYS.findIndex(d => ymdColombo(d) === today);
   if (startIdx < 0) startIdx = 0;
 
-  // walk backwards (yesterday, -1, -2, ...) and ensure at least the last 3 days exist
   const need = [];
   for (let i=0, added=0; i<30 && added<3 && (startIdx+i)<DAYS.length; i++){
     const dStr = ymdColombo(DAYS[i]);
     if (!store[dStr]){ need.push(dStr); added++; }
   }
-  // append from older to newer so bottom shows recent order
   need.reverse();
   for (const dStr of need){
     await ensureDailyCardsFor(dStr);
   }
 }
 
-/* Live refresh: update “today” cards’ last price every 5 minutes */
+/* Live refresh for today's last prices */
 async function refreshTodayLastPrices(){
   const today = todayColomboYMD();
   const nodes = Array.from(CHAT.querySelectorAll('.nx-card'));
   if (!nodes.length) return;
 
-  // gather symbols present on today’s cards only (by time stamp text)
   const todayNodes = nodes.filter(n=>{
     const t = n.querySelector('.nx-time')?.textContent || '';
     return t.startsWith(today);
@@ -938,11 +979,9 @@ async function refreshTodayLastPrices(){
       mapSymToLast[sym] = loadCurrentPrice(sym);
     }
   }
-  // resolve all
   const entries = await Promise.all(Object.entries(mapSymToLast).map(async([s,p])=>[s, await p]));
   const latest = Object.fromEntries(entries.filter(([,v])=>isFinite(v)));
 
-  // apply DOM updates (Last Price text only; ROI/PNL left as-is for card integrity)
   todayNodes.forEach(n=>{
     const title = n.querySelector('.nx-title')?.textContent || '';
     const sym = (title.split(' ')[0] || '').trim();
@@ -958,7 +997,7 @@ async function refreshTodayLastPrices(){
 (async function init(){
   try{ await fetch(API.ping, {cache:'no-store'}); }catch(e){ /* ignore */ }
 
-  // Initial render for recent days (top/before loader so scroll behaves)
+  // Initial render for recent days
   for (let i=0; i<INITIAL_DAYS && i<DAYS.length; i++){
     const frag = await buildDayFragment(DAYS[i]);
     CHAT.appendChild(frag);
@@ -968,7 +1007,7 @@ async function refreshTodayLastPrices(){
 
   assignQRCodesToTail();
 
-  // Infinite scroll for older history
+  // Infinite scroll (older)
   CHAT.addEventListener('scroll', async ()=>{
     if (CHAT.scrollTop <= 100){
       if (preloading) return;
@@ -999,15 +1038,15 @@ async function refreshTodayLastPrices(){
     }
   });
 
-  // ---- DAILY AUTO-ADD (~10 cards) ----
+  // Daily auto-add (~10 cards)
   const today = todayColomboYMD();
-  await backfillMissingDays();     // catch-up for recent days (if page wasn’t open)
-  await ensureDailyCardsFor(today); // make sure today has its batch
+  await backfillMissingDays();
+  await ensureDailyCardsFor(today);
 
-  // schedule nightly rollover at 00:00 Colombo (if page stays open)
+  // Nightly rollover
   (function scheduleMidnightRollover(){
     const now = new Date();
-    const {startUTC} = colomboMidnightBounds(new Date(now.getTime()+86400000)); // next day start
+    const {startUTC} = colomboMidnightBounds(new Date(now.getTime()+86400000));
     const msToNext = startUTC.getTime() - now.getTime();
     setTimeout(async ()=>{
       const newDay = todayColomboYMD();
@@ -1016,9 +1055,8 @@ async function refreshTodayLastPrices(){
     }, Math.max(1000, msToNext));
   })();
 
-  // live last-price refresh for today’s cards (every 5 minutes)
+  // Live last-price refresh (5 min)
   setInterval(refreshTodayLastPrices, 5*60*1000);
-  // and one immediate refresh on load
   refreshTodayLastPrices();
 })();
 
